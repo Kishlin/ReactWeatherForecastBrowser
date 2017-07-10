@@ -6,18 +6,20 @@ import GoogleMap from '../components/google_map';
 
 class WeatherList extends Component {
 	renderWeather(cityData) {
-		const name         = cityData.city.name;
-		const { lon, lat } = cityData.city.coord;
-		const temps        = cityData.list.map(weather => weather.main.temp - 273.15);
-		const pressures    = cityData.list.map(weather => weather.main.pressure);
-		const humidities   = cityData.list.map(weather => weather.main.humidity);
-
+		const { lon, lat }   = cityData.location;
+		const name           = cityData.location.name;
+		const temps          = cityData.forecast.forecastday.map(weather => weather.day.avgtemp_c);
+		const precipitations = cityData.forecast.forecastday.map(weather => weather.day.totalprecip_mm);
+		const humidities     = cityData.forecast.forecastday.map(weather => weather.day.avghumidity);
+		const conditions     = cityData.forecast.forecastday.map(weather => [weather.date, weather.day.condition]);
+		
 		return (
-			<tr key={name}>
+			<tr key={`${name}`}>
 				<td><GoogleMap lon={lon} lat={lat} /></td>
-				<td><Chart data={temps}      color="orange" suffix='°C'  /></td>
-				<td><Chart data={pressures}  color="green"  suffix='hPa' /></td>
-				<td><Chart data={humidities} color="blue"   suffix='%'   /></td>
+				<td><Chart data={temps}           color="orange" suffix='°C' /></td>
+				<td><Chart data={precipitations}  color="green"  suffix='mm' /></td>
+				<td><Chart data={humidities}      color="blue"   suffix='%'  /></td>
+				<td>{conditions.map(condition => <img src={condition[1].icon} title={`${condition[0]}: ${condition[1].text}`} />)}</td>
 			</tr>
 		);
 	}
@@ -29,8 +31,9 @@ class WeatherList extends Component {
 					<tr>
 						<th>City</th>
 						<th>Temperature (°C)</th>
-						<th>Pressure (hPa)</th>
+						<th>Precipitation (mm)</th>
 						<th>Humidity (%)</th>
+						<th>Condition</th>
 					</tr>
 				</thead>
 				<tbody>

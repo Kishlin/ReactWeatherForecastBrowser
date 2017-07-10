@@ -13,6 +13,7 @@ export default (props) => {
 				<SparklinesLine color={props.color} />
 				<SparklinesReferenceLine type="avg" />
 			</Sparklines>
+			<div>Range : {_.min(props.data)} - {_.max(props.data)} {props.suffix}</div>
 			<div>Average : {average(props.data)} {props.suffix}</div>
 		</div>
 	);
